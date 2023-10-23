@@ -1,0 +1,69 @@
+name: React App CI/CD
+
+on:
+    push:
+      branches:
+        - 'feature/*'
+    schedule:
+      - cron: '45 15 * * 1'
+      - cron: '0 20 * * 1'
+    workflow_dispatch:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Application
+        run: npm run build
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/release/1.0')
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Hosting Service
+        # Add the specific deployment steps for your hosting service here
+        # For example, if you're using GitHub Pages:
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          npm install -g gh-pages
+          gh-pages -d build
+
+          # Additional steps to deploy the build
