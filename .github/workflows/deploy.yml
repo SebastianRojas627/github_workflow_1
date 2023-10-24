@@ -1,0 +1,27 @@
+name: Project Deploy
+on:
+    push:
+      branches:
+        - 'release/**'
+    schedule:
+      - cron: '45 19 * * 1'   
+      - cron: '0 0 * * 2' 
+    workflow_dispatch:
+        
+jobs:
+  deploy_into_dev_server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: sebastian
+          key: ${{ secrets.SERVER_KEY }}
+          script: |
+            sudo docker stop workflowp
+            sudo docker rm workflowp
+            sudo docker run -d -p 8080:80 --name workflowp sebastian627/workflowp:latest
+      - name: Completion
+        run: |
+          echo "Succesful deployment"      
