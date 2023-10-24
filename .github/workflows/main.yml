@@ -34,6 +34,12 @@ jobs:
     - name: Checkout git
       uses: actions/checkout@v4
 
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build Application
+      run: npm run build
+
     - name: QEMU
       uses: docker/setup-qemu-action@v3
 
