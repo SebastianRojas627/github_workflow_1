@@ -3,9 +3,6 @@ on:
     push:
       branches:
         - 'release/**'
-    schedule:
-      - cron: '45 19 * * 1'   
-      - cron: '0 0 * * 2' 
     workflow_dispatch:
         
 jobs:
